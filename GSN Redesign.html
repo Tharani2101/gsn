@@ -1,0 +1,1428 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GSN — Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5F0E8;
+    --ink:#0E0E10;
+    --ink-2:#2a2a2e;
+    --muted:#5b5b62;
+    --line:rgba(14,14,16,0.10);
+    --gold:#C9A84C;
+    --gold-tint:#FAF3E0;
+    --yellow:#F6E9B2;
+    --blue:#CFE2F1;
+    --purple:#E1D6F2;
+    --mint:#CFE9DD;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--cream);color:var(--ink);font-family:"Inter",ui-sans-serif,system-ui,sans-serif;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 28px}
+  .serif{font-family:"Instrument Serif",ui-serif,Georgia,serif;font-style:italic;font-weight:400;letter-spacing:-0.01em}
+
+  /* nav */
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:22px 28px;max-width:1320px;margin:0 auto}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:0.02em}
+  .brand .dot{width:28px;height:28px;border-radius:8px;background:var(--ink);color:#fff;display:grid;place-items:center;font-weight:800;font-size:13px}
+  .navlinks{display:flex;gap:28px;font-size:14px;color:var(--ink-2)}
+  .navlinks a:hover{color:var(--ink)}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;border:1px solid transparent;transition:transform .2s ease,background .2s ease,color .2s ease}
+  .pill.dark{background:var(--ink);color:#fff}
+  .pill.dark:hover{transform:translateY(-1px);background:#1a1a1d}
+  .pill.ghost{border-color:var(--line);color:var(--ink)}
+
+  /* HERO */
+  .hero{padding:36px 0 64px}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:rgba(14,14,16,0.05);font-size:13px;color:var(--ink-2)}
+  .eyebrow .pulse{width:8px;height:8px;border-radius:50%;background:#1f9a5b;box-shadow:0 0 0 0 rgba(31,154,91,.5);animation:pulse 1.8s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,154,91,.5)}70%{box-shadow:0 0 0 10px rgba(31,154,91,0)}100%{box-shadow:0 0 0 0 rgba(31,154,91,0)}}
+  .hero-head{text-align:center;max-width:980px;margin:28px auto 0}
+  .hero-head h1{margin:18px 0 0;font-size:clamp(48px,7.4vw,104px);line-height:0.98;letter-spacing:-0.03em;font-weight:800}
+  .hero-head h1 .l1{display:block;font-weight:400;font-style:italic;font-family:"Instrument Serif",serif;letter-spacing:-0.01em}
+  .hero-head h1 .l2{display:block}
+  .hero-sub{max-width:620px;margin:24px auto 0;color:var(--muted);font-size:17px;line-height:1.55}
+  .hero-cta{display:flex;justify-content:center;margin-top:26px}
+
+  /* === HERO COVERFLOW === */
+  .hero{
+    padding:60px 0 0;
+    overflow:hidden;
+    background:var(--cream);
+  }
+  .hero-center{
+    text-align:center;
+    max-width:700px;
+    margin:0 auto;
+    padding:0 24px 8px;
+  }
+  .hero-center h1{
+    font-size:clamp(36px,5.5vw,74px);
+    line-height:1.0;
+    letter-spacing:-0.03em;
+    font-weight:800;
+    margin:16px 0 0;
+  }
+  .hero-center h1 .l1{
+    display:block;
+    font-family:"Instrument Serif",serif;
+    font-style:italic;
+    font-weight:400;
+    font-size:clamp(30px,4.5vw,62px);
+    margin-bottom:4px;
+  }
+  /* bottom text block after carousel */
+  .hero-bottom{
+    text-align:center;
+    max-width:700px;
+    margin:0 auto;
+    padding:0 24px 36px;
+  }
+  .hero-bottom h1{
+    font-size:clamp(26px,3.8vw,58px);
+    line-height:1.05;
+    letter-spacing:-0.03em;
+    font-weight:800;
+    margin:0 0 16px;
+  }
+  .hero-bottom .hero-sub{
+    font-size:clamp(14px,1.5vw,17px);
+    color:var(--muted);
+    line-height:1.6;
+    max-width:50ch;
+    margin:0 auto 26px;
+  }
+  .hero-bottom .hero-cta{display:flex;justify-content:center;}
+  /* card stage */
+  .card-stage{
+    width:100%;
+    overflow:hidden;
+    height:260px;
+    position:relative;
+    perspective:1200px;
+    perspective-origin:50% 0%;
+    margin-top:8px;
+  }
+  .card-strip{
+    display:flex;
+    gap:14px;
+    position:absolute;
+    top:50%;
+    left:0;
+    will-change:transform;
+    padding:10px 0;
+  }
+  .orbit-card{
+    width:165px;
+    height:240px;
+    border-radius:20px;
+    overflow:hidden;
+    flex-shrink:0;
+    background:var(--card-bg,#D6CFC4);
+    box-shadow:0 16px 40px -12px rgba(14,14,16,0.25),0 1px 0 rgba(255,255,255,0.5) inset;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-end;
+    padding-bottom:12px;
+    position:relative;
+    will-change:transform,opacity;
+  }
+  .orbit-card img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    pointer-events:none;
+  }
+  .orbit-card .name{
+    position:relative;z-index:2;text-align:left;width:100%;
+    padding:0 10px;color:var(--ink);font-size:9px;
+    letter-spacing:0.07em;text-transform:uppercase;opacity:0.65;
+  }
+  .orbit-card .name b{
+    display:block;font-size:12px;letter-spacing:0;
+    text-transform:none;font-weight:700;margin-top:1px;color:var(--ink);opacity:1;
+  }
+
+  /* feature marquee */
+  .features-wrap{
+    width:100%;
+    overflow:hidden;
+    margin-top:64px;
+    border-top:1px solid var(--line);
+    padding-top:40px;
+    position:relative;
+  }
+  /* fade edges */
+  .features-wrap::before,.features-wrap::after{
+    content:'';
+    position:absolute;
+    top:0;bottom:0;
+    width:120px;
+    z-index:2;
+    pointer-events:none;
+  }
+  .features-wrap::before{left:0;background:linear-gradient(to right,var(--cream),transparent);}
+  .features-wrap::after{right:0;background:linear-gradient(to left,var(--cream),transparent);}
+  .features-track{
+    display:flex;
+    gap:64px;
+    width:max-content;
+    animation:featScroll 22s linear infinite;
+  }
+  .features-wrap:hover .features-track{animation-play-state:paused;}
+  @keyframes featScroll{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  .feat{
+    display:flex;
+    flex-direction:column;
+    flex-shrink:0;
+    width:280px;
+  }
+  .feat h4{margin:0 0 8px;font-size:16px;font-weight:700;letter-spacing:-0.01em}
+  .feat p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55}
+  .feat .ico{
+    width:32px;height:32px;border-radius:8px;background:var(--ink);color:#fff;
+    display:grid;place-items:center;margin-bottom:14px;font-size:14px;
+  }
+
+  /* SECTION HEADER COMMON */
+  .sec-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:40px}
+  .sec-head .left h2{margin:8px 0 0;font-size:clamp(34px,4.4vw,56px);line-height:1.02;letter-spacing:-0.025em;font-weight:800;max-width:18ch}
+  .sec-head .left h2 em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400}
+  .sec-head .left .kicker{font-size:13px;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted)}
+  .sec-head .right{color:var(--muted);font-size:15.5px;line-height:1.55;max-width:38ch}
+
+  /* IMPACT BENTO */
+  .impact{padding:80px 0}
+  .bento{display:grid;grid-template-columns:1.2fr 1fr 1fr;grid-template-rows:280px 280px;gap:18px}
+  .b{position:relative;border-radius:24px;overflow:hidden;padding:26px;display:flex;flex-direction:column;justify-content:space-between;isolation:isolate}
+  .b .stat{font-size:64px;line-height:1;letter-spacing:-0.03em;font-weight:800}
+  .b .label{font-size:13px;text-transform:uppercase;letter-spacing:0.14em;color:rgba(14,14,16,.6)}
+  .b .desc{font-size:15px;color:rgba(14,14,16,.75);max-width:24ch;line-height:1.4}
+  .b .cut{position:absolute;pointer-events:none}
+  .b1{background:var(--yellow);grid-row:1/3}
+  .b2{background:var(--blue)}
+  .b3{background:var(--purple)}
+  .b4{background:var(--mint);grid-column:2/4}
+  .b1 .cut{right:-20px;bottom:-20px;width:72%;}
+  .b2 .cut{right:-12px;bottom:-18px;height:82%;width:auto;object-fit:contain;object-position:bottom right;}
+  .b3 .cut{right:-10px;bottom:-22px;height:82%;width:auto;object-fit:contain;object-position:bottom right;}
+  .b4 .cut{right:12%;top:50%;transform:translateY(-50%);width:65%;height:95%;object-fit:contain;object-position:center;}
+  .b .top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:2}
+  .b .ico-pill{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;background:rgba(14,14,16,0.08);border-radius:999px;font-size:12px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink)}
+  .b .bottom{position:relative;z-index:2;max-width:62%}
+  .b1 .stat{font-size:120px}
+  /* Mini chart for card 3 */
+  .chart{display:flex;align-items:end;gap:6px;height:46px;margin-top:8px;position:relative;z-index:2}
+  .chart i{display:block;width:10px;background:var(--ink);border-radius:3px;opacity:.85}
+  /* globe icon mini */
+  .globe-mini{width:28px;height:28px;color:var(--ink)}
+
+  /* SECTION 4 — leading org */
+  .leading{padding:60px 0 100px}
+  .leading-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:64px;align-items:start}
+  .leading .left h2{margin:8px 0 18px;font-size:clamp(38px,4.6vw,60px);line-height:1.0;letter-spacing:-0.025em;font-weight:800}
+  .leading .left h2 em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400}
+  .leading p{color:var(--muted);font-size:16px;line-height:1.6}
+  .bullets{margin-top:26px;display:flex;flex-direction:column;gap:18px}
+  .bullet{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,0.5);backdrop-filter:blur(2px);transition:border-color .25s ease,background .25s ease}
+  .bullet:hover{border-color:rgba(201,168,76,0.55);background:rgba(255,255,255,0.85)}
+  .bullet .num{width:32px;height:32px;border-radius:50%;border:2px solid var(--gold);display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--gold)}
+  .bullet h5{margin:0 0 4px;font-weight:700;font-size:16px}
+  .bullet p{margin:0;font-size:14px;color:var(--muted)}
+  .bullet .glb{width:34px;height:34px;color:var(--gold)}
+
+  .leading .panel{position:sticky;top:24px;background:transparent;border:none;border-radius:0;padding:24px 0;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+  .leading .panel .kicker{font-size:12px;text-transform:uppercase;letter-spacing:0.18em;color:var(--muted)}
+  .leading .panel h3{margin:0;font-size:24px;letter-spacing:-0.01em}
+  .leading .panel h3 em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400}
+  .globe-stage{width:260px;height:260px;display:grid;place-items:center;margin:6px 0}
+  #globeCanvas{width:260px;height:260px;display:block;}
+  .leading .panel .countries{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:6px}
+  .leading .panel .countries span{padding:6px 11px;border-radius:999px;background:var(--cream);font-size:12px;color:var(--ink-2);letter-spacing:0.04em}
+  .leading .panel .meta{display:flex;justify-content:space-around;width:100%;border-top:1px solid var(--line);padding-top:18px;margin-top:6px}
+  .leading .panel .meta div{display:flex;flex-direction:column}
+  .leading .panel .meta b{font-size:22px;letter-spacing:-0.02em}
+  .leading .panel .meta span{font-size:11px;text-transform:uppercase;letter-spacing:0.12em;color:var(--muted);margin-top:4px}
+
+  /* SECTION 5 — How It Works accordion */
+  .how{padding:80px 0 100px;background:linear-gradient(180deg,transparent,rgba(14,14,16,0.025))}
+  .steps{display:flex;flex-direction:column;gap:14px;margin-top:8px}
+  /* HOW IT WORKS — horizontal card grid */
+  .how{padding:80px 0 100px}
+  .step-grid{
+    display:flex;
+    gap:16px;
+    margin-top:40px;
+    align-items:stretch;
+  }
+  .scard{
+    border-radius:20px;
+    overflow:hidden;
+    cursor:pointer;
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    flex:1 1 0;
+    min-width:0;
+    transition:
+      flex .5s cubic-bezier(.4,0,.2,1),
+      opacity .35s ease,
+      box-shadow .28s ease,
+      transform .28s ease;
+  }
+  .scard:hover:not(.sc-active){
+    transform:translateY(-5px);
+    box-shadow:0 20px 40px -14px rgba(14,14,16,0.20);
+  }
+  /* per-card vibrant color schemes */
+  .scard:nth-child(1){
+    background:linear-gradient(145deg,#FDF0C8 0%,#F5E098 100%);
+  }
+  .scard:nth-child(1) .scard-icon{background:rgba(201,168,76,0.22)}
+  .scard:nth-child(1) .scard-num{background:#C9A84C}
+  .scard:nth-child(1) .scard-tag{background:rgba(201,168,76,0.18);color:#7A5C10}
+  .scard:nth-child(1) .scard-footer{border-color:rgba(201,168,76,0.25)}
+  .scard:nth-child(1) .scard-visual{border-color:rgba(201,168,76,0.2)}
+
+  .scard:nth-child(2){
+    background:linear-gradient(145deg,#D8ECFA 0%,#B4D6F0 100%);
+  }
+  .scard:nth-child(2) .scard-icon{background:rgba(70,140,210,0.18)}
+  .scard:nth-child(2) .scard-num{background:#3D8CC8}
+  .scard:nth-child(2) .scard-tag{background:rgba(70,140,210,0.15);color:#1A547A}
+  .scard:nth-child(2) .scard-footer{border-color:rgba(70,140,210,0.2)}
+  .scard:nth-child(2) .scard-visual{border-color:rgba(70,140,210,0.18)}
+
+  .scard:nth-child(3){
+    background:linear-gradient(145deg,#EEE0FA 0%,#D8C4F4 100%);
+  }
+  .scard:nth-child(3) .scard-icon{background:rgba(140,80,210,0.16)}
+  .scard:nth-child(3) .scard-num{background:#8B52CC}
+  .scard:nth-child(3) .scard-tag{background:rgba(140,80,210,0.14);color:#52208A}
+  .scard:nth-child(3) .scard-footer{border-color:rgba(140,80,210,0.2)}
+  .scard:nth-child(3) .scard-visual{border-color:rgba(140,80,210,0.18)}
+
+  .scard:nth-child(4){
+    background:linear-gradient(145deg,#D4F2E2 0%,#AEDFC4 100%);
+  }
+  .scard:nth-child(4) .scard-icon{background:rgba(40,160,100,0.18)}
+  .scard:nth-child(4) .scard-num{background:#2A9660}
+  .scard:nth-child(4) .scard-tag{background:rgba(40,160,100,0.15);color:#0E5C32}
+  .scard:nth-child(4) .scard-footer{border-color:rgba(40,160,100,0.2)}
+  .scard:nth-child(4) .scard-visual{border-color:rgba(40,160,100,0.18)}
+
+  /* === collapsed (other cards when one is active) === */
+  .step-grid.has-active{
+    align-items:flex-start;
+  }
+  .step-grid.has-active .scard:not(.sc-active){
+    flex:0 0 0px;
+    opacity:0;
+    pointer-events:none;
+    overflow:hidden;
+    height:0;
+    min-height:0;
+    padding:0;
+    gap:0;
+    margin:0;
+  }
+  /* === active expanded card — compact/minimal === */
+  .step-grid.has-active .scard.sc-active{
+    flex:1 1 100%;
+    display:grid;
+    grid-template-columns:190px 1fr;
+    grid-template-rows:1fr auto;
+    cursor:default;
+    max-height:240px;
+    box-shadow:0 16px 40px -14px rgba(14,14,16,0.20);
+  }
+  .scard.sc-active .scard-close{
+    grid-column:2;
+    grid-row:1;
+  }
+  .scard.sc-active .scard-visual{
+    grid-column:1;
+    grid-row:1 / -1;
+    width:100%;
+    height:auto;
+    border-bottom:none;
+    border-right:1px solid rgba(14,14,16,0.08);
+    min-height:0;
+  }
+  .scard.sc-active .scard-icon{
+    width:66px;
+    height:66px;
+    font-size:30px;
+    border-radius:16px;
+  }
+  .scard.sc-active .scard-body{
+    grid-column:2;
+    grid-row:1;
+    padding:20px 26px 10px;
+    justify-content:center;
+    gap:8px;
+  }
+  .scard.sc-active .scard-title{
+    font-size:18px;
+    letter-spacing:-0.01em;
+    margin-bottom:2px;
+  }
+  .scard.sc-active .scard-desc{
+    font-size:13px;
+    max-width:60ch;
+    line-height:1.55;
+  }
+  .scard.sc-active .scard-footer{
+    grid-column:2;
+    grid-row:2;
+    padding:10px 26px;
+    border-top:1px solid rgba(14,14,16,0.08);
+    align-items:center;
+  }
+  .scard.sc-active .scard-tag{ padding:4px 10px; font-size:10px; }
+
+  /* close button */
+  .scard-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:32px;
+    height:32px;
+    border-radius:50%;
+    border:none;
+    background:rgba(14,14,16,0.12);
+    color:var(--ink);
+    font-size:14px;
+    cursor:pointer;
+    display:none;
+    place-items:center;
+    transition:background .2s ease;
+    z-index:10;
+  }
+  .scard-close:hover{background:rgba(14,14,16,0.22)}
+  .scard.sc-active .scard-close{display:grid}
+
+  /* top visual area */
+  .scard-visual{
+    position:relative;
+    height:170px;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-bottom:1px solid rgba(14,14,16,0.07);
+    transition:width .5s cubic-bezier(.4,0,.2,1), height .5s ease;
+  }
+  .scard-icon{
+    width:72px;
+    height:72px;
+    border-radius:18px;
+    background:rgba(14,14,16,0.10);
+    display:grid;
+    place-items:center;
+    font-size:32px;
+    transition:transform .28s ease, width .4s ease, height .4s ease, font-size .4s ease;
+  }
+  .scard:hover:not(.sc-active) .scard-icon{transform:scale(1.08)}
+  /* hover overlay */
+  .scard-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(14,14,16,0.35);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    opacity:0;
+    transition:opacity .25s ease;
+    backdrop-filter:blur(2px);
+    pointer-events:none;
+  }
+  .scard:hover:not(.sc-active) .scard-overlay{opacity:1}
+  .scard.sc-active .scard-overlay{display:none}
+  .scard-overlay span{
+    padding:10px 22px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.92);
+    font-size:14px;
+    font-weight:700;
+    color:var(--ink);
+    letter-spacing:0.01em;
+  }
+  /* card body */
+  .scard-body{
+    padding:18px 20px 20px;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    transition:padding .4s ease;
+  }
+  .scard-meta{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .scard-num{
+    width:30px;
+    height:30px;
+    border-radius:50%;
+    background:var(--gold);
+    color:#1a1a1d;
+    display:grid;
+    place-items:center;
+    font-size:12px;
+    font-weight:800;
+    flex-shrink:0;
+  }
+  .scard-label{
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    color:var(--muted);
+  }
+  .scard-title{
+    font-size:16px;
+    font-weight:700;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    line-height:1.25;
+    margin:0;
+    transition:font-size .3s ease;
+  }
+  .scard-desc{
+    font-size:13px;
+    color:var(--muted);
+    line-height:1.5;
+    flex:1;
+    transition:font-size .3s ease;
+  }
+  /* footer strip */
+  .scard-footer{
+    border-top:1px solid rgba(14,14,16,0.08);
+    padding:10px 20px;
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    transition:padding .4s ease;
+  }
+  .scard-tag{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-2);
+    padding:3px 8px;
+    border-radius:999px;
+    background:rgba(14,14,16,0.07);
+    white-space:nowrap;
+    transition:padding .3s ease, font-size .3s ease;
+  }
+  @media(max-width:900px){
+    .step-grid{flex-wrap:wrap}
+    .scard{flex:1 1 calc(50% - 8px)}
+    .step-grid.has-active .scard.sc-active{flex-direction:column}
+    .scard.sc-active .scard-visual{width:100%;height:200px;border-right:none;border-bottom:1px solid rgba(14,14,16,0.08)}
+  }
+  @media(max-width:520px){
+    .scard{flex:1 1 100%}
+  }
+
+  /* footer cta */
+  footer.cta{padding:90px 0 80px;text-align:center}
+  footer.cta h2{font-size:clamp(36px,5vw,68px);line-height:1.02;letter-spacing:-0.025em;margin:0 0 18px;font-weight:800;max-width:18ch;margin-inline:auto}
+  footer.cta h2 em{font-family:"Instrument Serif",serif;font-style:italic;font-weight:400}
+  footer.cta p{color:var(--muted);max-width:56ch;margin:0 auto 28px;font-size:16px;line-height:1.6}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+  @media (max-width:900px){
+    .navlinks{display:none}
+    .features{grid-template-columns:1fr;gap:24px}
+    .bento{grid-template-columns:1fr;grid-template-rows:auto;gap:14px}
+    .b1{grid-row:auto}
+    .b4{grid-column:auto}
+    .leading-grid{grid-template-columns:1fr}
+    .fan{height:340px}
+    .card{width:130px;height:175px}
+  }
+
+  /* === TESTIMONIALS SECTION === */
+  .testimonials{
+    padding:90px 0 100px;
+    background:#0E0E10;
+    overflow:hidden;
+    position:relative;
+  }
+  .testimonials .sec-head .left .kicker{color:rgba(201,168,76,0.7)}
+  .testimonials .sec-head .left h2{color:#fff}
+  .testimonials .sec-head .right{color:rgba(255,255,255,0.5)}
+
+  .testi-marquee-wrap{
+    position:relative;
+    margin-top:48px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+  }
+  /* fade left/right edges */
+  .testi-marquee-wrap::before,
+  .testi-marquee-wrap::after{
+    content:'';
+    position:absolute;
+    top:0;bottom:0;
+    width:160px;
+    z-index:3;
+    pointer-events:none;
+  }
+  .testi-marquee-wrap::before{left:0;background:linear-gradient(to right,#0E0E10,transparent)}
+  .testi-marquee-wrap::after{right:0;background:linear-gradient(to left,#0E0E10,transparent)}
+
+  .testi-row{
+    display:flex;
+    gap:18px;
+    width:max-content;
+  }
+  .testi-row.row-fwd{animation:testiScrollFwd 40s linear infinite}
+  .testi-row.row-rev{animation:testiScrollRev 44s linear infinite}
+  .testi-row:hover{animation-play-state:paused}
+
+  @keyframes testiScrollFwd{
+    from{transform:translateX(0)}
+    to{transform:translateX(-50%)}
+  }
+  @keyframes testiScrollRev{
+    from{transform:translateX(-50%)}
+    to{transform:translateX(0)}
+  }
+
+  .tcard{
+    flex-shrink:0;
+    width:320px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:20px;
+    padding:24px 24px 20px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transition:background .25s ease, border-color .25s ease, transform .25s ease;
+    cursor:default;
+  }
+  .tcard:hover{
+    background:rgba(255,255,255,0.08);
+    border-color:rgba(201,168,76,0.35);
+    transform:translateY(-4px);
+  }
+  .tcard-stars{
+    display:flex;
+    gap:4px;
+  }
+  .tcard-stars span{
+    color:#C9A84C;
+    font-size:15px;
+    line-height:1;
+  }
+  .tcard-quote{
+    font-size:14.5px;
+    line-height:1.65;
+    color:rgba(255,255,255,0.82);
+    flex:1;
+    font-style:italic;
+  }
+  .tcard-author{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    margin-top:4px;
+  }
+  .tcard-avatar{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    display:grid;
+    place-items:center;
+    font-size:13px;
+    font-weight:700;
+    color:#fff;
+    flex-shrink:0;
+    letter-spacing:0.02em;
+  }
+  .tcard-info b{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+    color:#fff;
+  }
+  .tcard-info span{
+    font-size:12px;
+    color:rgba(201,168,76,0.75);
+    letter-spacing:0.04em;
+  }
+</style>
+</head>
+<body data-screen-label="GSN Redesign">
+
+<header class="nav">
+  <div class="brand"><div class="dot">G</div> GSN</div>
+  <nav class="navlinks">
+    <a>Experience</a><a>Vision</a><a>Community</a><a>Franchising</a><a>About</a>
+  </nav>
+  <div class="nav-cta">
+    <a class="pill ghost">Login</a>
+    <a class="pill dark">Get Invited</a>
+  </div>
+</header>
+
+<!-- ============== SECTION 1 — HERO ============== -->
+<section class="hero" data-screen-label="01 Hero">
+
+  <!-- TOP: eyebrow + first line of headline -->
+  <div class="hero-center">
+    <div style="display:flex;justify-content:center;margin-bottom:14px">
+      <div class="eyebrow"><span class="pulse"></span> 170,000+ members · 75+ countries</div>
+    </div>
+    <h1>
+      <span class="l1">Join the World's Best,</span>
+    </h1>
+  </div>
+
+  <!-- MIDDLE: Scrolling coverflow card strip -->
+  <div class="card-stage">
+    <div class="card-strip" id="cardStrip"></div>
+  </div>
+
+  <!-- BOTTOM: second headline line + subtitle + CTA -->
+  <div class="hero-bottom">
+    <h1>Business Referral<br>Network.</h1>
+    <div class="hero-cta">
+      <a class="pill dark">Get Invited <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+
+</section>
+
+    <!-- FEATURES marquee -->
+    <div class="features-wrap">
+      <div class="features-track">
+        <!-- Set 1 -->
+        <div class="feat">
+          <div class="ico">↻</div>
+          <h4>Real-Time Referrals</h4>
+          <p>Track every qualified referral as it moves through your chapter — visibility from intro to closed deal.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">◇</div>
+          <h4>Chapter Meetings</h4>
+          <p>Weekly structured sessions with vetted professionals. One seat per industry — your collaborators, not competitors.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">◎</div>
+          <h4>Global Growth Tracking</h4>
+          <p>Measure referrals, revenue, and reach across 75+ countries through GSN's unified analytics dashboard.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">⬡</div>
+          <h4>Vetted Members Only</h4>
+          <p>Every GSN member is reviewed and approved — ensuring quality, trust, and serious business intent in every chapter.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">✦</div>
+          <h4>Structured Accountability</h4>
+          <p>Weekly goals, attendance tracking, and referral metrics keep every member performing at their best.</p>
+        </div>
+        <!-- Set 2 (duplicate for seamless loop) -->
+        <div class="feat">
+          <div class="ico">↻</div>
+          <h4>Real-Time Referrals</h4>
+          <p>Track every qualified referral as it moves through your chapter — visibility from intro to closed deal.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">◇</div>
+          <h4>Chapter Meetings</h4>
+          <p>Weekly structured sessions with vetted professionals. One seat per industry — your collaborators, not competitors.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">◎</div>
+          <h4>Global Growth Tracking</h4>
+          <p>Measure referrals, revenue, and reach across 75+ countries through GSN's unified analytics dashboard.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">⬡</div>
+          <h4>Vetted Members Only</h4>
+          <p>Every GSN member is reviewed and approved — ensuring quality, trust, and serious business intent in every chapter.</p>
+        </div>
+        <div class="feat">
+          <div class="ico">✦</div>
+          <h4>Structured Accountability</h4>
+          <p>Weekly goals, attendance tracking, and referral metrics keep every member performing at their best.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 3 — IMPACT BENTO ============== -->
+<section class="impact" data-screen-label="03 Impact">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="kicker">The GSN Impact</div>
+        <h2>Growth, connection <em>&amp;</em> measurable purpose.</h2>
+      </div>
+      <div class="right">
+        Built more than a network — a global ecosystem where business growth meets conscious collaboration, backed by data and verified relationships.
+      </div>
+    </div>
+
+    <div class="bento">
+      <!-- Card 1 -->
+      <div class="b b1">
+        <div class="top">
+          <span class="ico-pill">Members</span>
+        </div>
+        <div class="bottom">
+          <div class="stat">150K+</div>
+          <div class="desc">Growth-oriented professionals across 100+ industries.</div>
+        </div>
+        <img class="cut" alt="" src="new1.png" style="border-radius:0;mix-blend-mode:normal;opacity:1;object-fit:contain;object-position:bottom right;"/>
+      </div>
+      <!-- Card 2 -->
+      <div class="b b2">
+        <div class="top"><span class="ico-pill">Businesses</span></div>
+        <div class="bottom">
+          <div class="stat">100+</div>
+          <div class="desc">Industry categories represented across every chapter.</div>
+        </div>
+        <img class="cut" alt="" src="new4rm.png" style="border-radius:0;mix-blend-mode:normal;opacity:1;object-fit:contain;object-position:bottom right;"/>
+      </div>
+      <!-- Card 3 -->
+      <div class="b b3">
+        <div class="top"><span class="ico-pill">AI Growth</span></div>
+        <div class="bottom">
+          <div class="stat" style="font-size:30px">AI-Driven<br/>Growth</div>
+          <div class="chart" aria-hidden="true">
+            <i style="height:30%"></i><i style="height:48%"></i><i style="height:38%"></i><i style="height:65%"></i><i style="height:55%"></i><i style="height:80%"></i><i style="height:72%"></i><i style="height:96%"></i>
+          </div>
+          <div class="desc" style="margin-top:8px">Smart matchmaking, faster connections.</div>
+        </div>
+        <img class="cut" alt="" src="new2rmbg.png" style="border-radius:0;mix-blend-mode:normal;opacity:1;object-fit:contain;object-position:bottom right;"/>
+      </div>
+      <!-- Card 4 -->
+      <div class="b b4">
+        <div class="top">
+          <span class="ico-pill">
+            <svg class="globe-mini" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/>
+            </svg>
+            Global Reach
+          </span>
+        </div>
+        <div class="bottom" style="max-width:50%">
+          <div class="stat">45+</div>
+          <div class="desc">Countries — and growing every quarter, by referral.</div>
+        </div>
+        <img class="cut" alt="" src="new3rmbg.png"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 4 — Leading Org with Globe ============== -->
+<section class="leading" data-screen-label="04 Leading Org">
+  <div class="wrap">
+    <div class="leading-grid">
+      <div class="left">
+        <div class="kicker" style="font-size:13px;text-transform:uppercase;letter-spacing:0.14em;color:var(--muted)">What Is GSN</div>
+        <h2>The world's leading <em>business referral</em> organization.</h2>
+        <p>GSN — Global Success Network — unites ambitious professionals in weekly chapter meetings designed to build trust, generate referrals, and accelerate growth. With a presence in 75+ countries and a community of 170,000+ members, GSN is a global ecosystem of mutual success built on the philosophy of <strong>Givers Gain®</strong>.</p>
+
+        <div class="bullets">
+          <div class="bullet">
+            <div class="num">01</div>
+            <div>
+              <h5>Structured Referral System</h5>
+              <p>A proven framework for passing qualified referrals every week.</p>
+            </div>
+            <span></span>
+          </div>
+          <div class="bullet">
+            <div class="num">02</div>
+            <div>
+              <h5>Global Chapter Network</h5>
+              <p>Connect with professionals in your city and across 75+ countries worldwide.</p>
+            </div>
+            <!-- inline globe accent -->
+            <div class="globe-stage" style="width:48px;height:48px">
+              <svg class="globe-svg" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1.6">
+                <g class="spin">
+                  <circle cx="50" cy="50" r="38"/>
+                  <ellipse cx="50" cy="50" rx="38" ry="14"/>
+                  <ellipse cx="50" cy="50" rx="14" ry="38"/>
+                  <ellipse cx="50" cy="50" rx="28" ry="38"/>
+                  <line x1="12" y1="50" x2="88" y2="50"/>
+                  <line x1="50" y1="12" x2="50" y2="88"/>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="bullet">
+            <div class="num">03</div>
+            <div>
+              <h5>Proven Business Growth</h5>
+              <p>Members report an average 20%+ revenue increase in their first year.</p>
+            </div>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right panel with big globe -->
+      <aside class="panel">
+        <div class="kicker">Global Network</div>
+        <h3>Spinning across <em>75+</em> countries</h3>
+        <div class="globe-stage" id="bigGlobe">
+          <canvas id="globeCanvas" width="520" height="520"></canvas>
+        </div>
+        <div class="countries">
+          <span>India</span><span>UAE</span><span>USA</span><span>UK</span><span>Singapore</span><span>South Africa</span><span>Australia</span>
+        </div>
+        <div class="meta">
+          <div><b>170K+</b><span>Members</span></div>
+          <div><b>75+</b><span>Countries</span></div>
+          <div><b>12K+</b><span>Chapters</span></div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 5 — How It Works cards ============== -->
+<section class="how" data-screen-label="05 How It Works">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="kicker">How It Works</div>
+        <h2>Your journey to <em>global success.</em></h2>
+      </div>
+      <div class="right">Four steps from invitation to international growth.</div>
+    </div>
+
+    <div class="step-grid">
+
+      <!-- Card 1: Get Invited -->
+      <div class="scard">
+        <button class="scard-close" aria-label="Close">✕</button>
+        <div class="scard-visual">
+          <div class="scard-icon">✉️</div>
+          <div class="scard-overlay"><span>Open</span></div>
+        </div>
+        <div class="scard-body">
+          <div class="scard-meta">
+            <div class="scard-num">01</div>
+            <span class="scard-label">Step One</span>
+          </div>
+          <p class="scard-title">Get Invited</p>
+          <p class="scard-desc">Request an invitation or get referred by an active GSN member to attend a chapter meeting as a first-time visitor — complimentary, no obligation.</p>
+        </div>
+        <div class="scard-footer">
+          <span class="scard-tag">Free Visit</span>
+          <span class="scard-tag">90 min</span>
+          <span class="scard-tag">No Obligation</span>
+        </div>
+      </div>
+
+      <!-- Card 2: Join a Chapter -->
+      <div class="scard">
+        <button class="scard-close" aria-label="Close">✕</button>
+        <div class="scard-visual">
+          <div class="scard-icon">🤝</div>
+          <div class="scard-overlay"><span>Open</span></div>
+        </div>
+        <div class="scard-body">
+          <div class="scard-meta">
+            <div class="scard-num">02</div>
+            <span class="scard-label">Step Two</span>
+          </div>
+          <p class="scard-title">Join a Chapter</p>
+          <p class="scard-desc">Apply for membership and lock in your exclusive category seat. Only one professional per industry per chapter — your collaborators, not competitors.</p>
+        </div>
+        <div class="scard-footer">
+          <span class="scard-tag">One per category</span>
+          <span class="scard-tag">Vetted</span>
+          <span class="scard-tag">Local + global</span>
+        </div>
+      </div>
+
+      <!-- Card 3: Build Relationships -->
+      <div class="scard">
+        <button class="scard-close" aria-label="Close">✕</button>
+        <div class="scard-visual">
+          <div class="scard-icon">💬</div>
+          <div class="scard-overlay"><span>Open</span></div>
+        </div>
+        <div class="scard-body">
+          <div class="scard-meta">
+            <div class="scard-num">03</div>
+            <span class="scard-label">Step Three</span>
+          </div>
+          <p class="scard-title">Build Relationships</p>
+          <p class="scard-desc">Attend weekly meetings, deliver 60-second presentations, and host one-to-ones. Givers Gain® turns every honest conversation into a future referral.</p>
+        </div>
+        <div class="scard-footer">
+          <span class="scard-tag">Weekly cadence</span>
+          <span class="scard-tag">60-sec pitch</span>
+          <span class="scard-tag">1:1 deep dives</span>
+        </div>
+      </div>
+
+      <!-- Card 4: Grow Your Business -->
+      <div class="scard">
+        <button class="scard-close" aria-label="Close">✕</button>
+        <div class="scard-visual">
+          <div class="scard-icon">🚀</div>
+          <div class="scard-overlay"><span>Open</span></div>
+        </div>
+        <div class="scard-body">
+          <div class="scard-meta">
+            <div class="scard-num">04</div>
+            <span class="scard-label">Step Four</span>
+          </div>
+          <p class="scard-title">Grow Your Business</p>
+          <p class="scard-desc">Receive and pass qualified referrals, track results in your dashboard, and scale globally through GSN's 75+ country network with AI-powered matchmaking.</p>
+        </div>
+        <div class="scard-footer">
+          <span class="scard-tag">Tracked referrals</span>
+          <span class="scard-tag">Cross-chapter</span>
+          <span class="scard-tag">75+ countries</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============== SECTION 6 — TESTIMONIALS ============== -->
+<section class="testimonials" data-screen-label="06 Member Stories">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="left">
+        <div class="kicker">Member Stories</div>
+        <h2>What Our Members <em>Say</em></h2>
+      </div>
+      <div class="right">Real voices from professionals across 75+ countries who found growth, trust, and purpose inside GSN.</div>
+    </div>
+  </div>
+
+  <div class="testi-marquee-wrap">
+
+    <!-- ROW 1 — scrolls left -->
+    <div class="testi-row row-fwd" id="testiRow1"></div>
+
+    <!-- ROW 2 — scrolls right -->
+    <div class="testi-row row-rev" id="testiRow2"></div>
+
+  </div>
+</section>
+
+<!-- footer CTA -->
+<footer class="cta">
+  <div class="wrap">
+    <h2>Ready to elevate your business <em>to a global stage?</em></h2>
+    <p>Request your invitation today and experience the GSN difference at a local chapter meeting — absolutely complimentary for first-time visitors.</p>
+    <div class="cta-row">
+      <a class="pill dark">Get Invited — It's Free</a>
+      <a class="pill ghost">Find a Chapter Near Me</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* === Testimonials Marquee === */
+(function initTestimonials() {
+  const row1El = document.getElementById('testiRow1');
+  const row2El = document.getElementById('testiRow2');
+  if (!row1El || !row2El) return;
+
+  const reviews = [
+    { quote: "GSN gave me more than just business leads — it gave me purpose-driven partners who align with my values. I've never felt so connected to my work and network.", name: "Ritika Sharma", role: "Digital Marketing Consultant", color: "#8B52CC" },
+    { quote: "Every connection inside GSN actually converts. This is not networking, it's growth. The quality of relationships here is unlike anything I've experienced before.", name: "Arjun Mehta", role: "Startup Founder", color: "#3D8CC8" },
+    { quote: "I've never experienced such high-quality referrals. The ecosystem is powerful and the community truly lives up to its promise of conscious collaboration.", name: "Neha Kapoor", role: "Business Coach", color: "#2A9660" },
+    { quote: "GSN changed how I look at business relationships. It's long-term, not transactional. The spiritual alignment aspect adds a depth other networks simply lack.", name: "Rahul Verma", role: "Consultant", color: "#C9784C" },
+    { quote: "The AI-powered matchmaking is brilliant. Within a month of joining, I had connections across 5 countries that directly contributed to my business growth.", name: "Priya Nair", role: "Tech Entrepreneur", color: "#4C8BC9" },
+    { quote: "The global reach of GSN is extraordinary. From Chennai to Dubai, I found verified partners who share the same values and business integrity.", name: "Vikram Singh", role: "Real Estate Developer", color: "#9C4CAA" },
+    { quote: "Being part of GSN circles has transformed how I build trust with clients. The community ethos is incredible and the referrals are genuinely high quality.", name: "Ananya Reddy", role: "Financial Advisor", color: "#C9A84C" },
+    { quote: "GSN opened doors I didn't even know existed. The global community and AI tools work together seamlessly to amplify your network's potential.", name: "Kiran Patel", role: "Manufacturing Exporter", color: "#4CAA7A" },
+  ];
+
+  const row1 = reviews.slice(0, 4);
+  const row2 = reviews.slice(4);
+
+  function initials(name) {
+    return name.split(' ').map(w => w[0]).join('').toUpperCase();
+  }
+
+  function buildCard(r) {
+    return `<div class="tcard">
+      <div class="tcard-stars">
+        <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+      </div>
+      <p class="tcard-quote">"${r.quote}"</p>
+      <div class="tcard-author">
+        <div class="tcard-avatar" style="background:${r.color}">${initials(r.name)}</div>
+        <div class="tcard-info">
+          <b>${r.name}</b>
+          <span>${r.role}</span>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  function populateRow(el, items) {
+    // Duplicate 4× for seamless infinite loop
+    let html = '';
+    for (let i = 0; i < 4; i++) {
+      items.forEach(r => { html += buildCard(r); });
+    }
+    el.innerHTML = html;
+  }
+
+  populateRow(row1El, row1);
+  populateRow(row2El, row2);
+})();
+</script>
+
+<script>
+/* === Hero Coverflow Carousel === */
+(function initCoverflow(){
+  const strip = document.getElementById('cardStrip');
+  const stage = strip ? strip.parentElement : null;
+  if (!strip || !stage) return;
+
+  const portraits = [
+    {
+      src:'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=400&q=80',
+      name:'GSN Chapter', role:'Weekly Meeting', bg:'#C8D4DC'
+    },
+    {
+      src:'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=400&q=80',
+      name:'Business Summit', role:'Global Network', bg:'#D4CEC8'
+    },
+    {
+      src:'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=400&q=80',
+      name:'Referral Meeting', role:'Partner Session', bg:'#C8D4CC'
+    },
+    {
+      src:'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=400&q=80',
+      name:'Strategy Board', role:'Leadership', bg:'#D4D0C8'
+    },
+    {
+      src:'https://images.unsplash.com/photo-1561489396-888724a1543d?w=400&q=80',
+      name:'Conference', role:'Annual Summit', bg:'#C8CCD4'
+    },
+    {
+      src:'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=400&q=80',
+      name:'Team Huddle', role:'Chapter Sync', bg:'#D4C8CC'
+    },
+    {
+      src:'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=400&q=80',
+      name:'Networking', role:'Deal Closing', bg:'#CCD4C8'
+    }
+  ];
+
+  // Build 3 sets for seamless infinite loop
+  const allCards = [];
+  for (let s = 0; s < 3; s++) {
+    portraits.forEach(p => {
+      const el = document.createElement('div');
+      el.className = 'orbit-card';
+      el.style.setProperty('--card-bg', p.bg);
+      el.innerHTML = `<img src="${p.src}" alt="${p.name}" loading="lazy"/>
+        <div class="name">${p.role}<b>${p.name}</b></div>`;
+      strip.appendChild(el);
+      allCards.push(el);
+    });
+  }
+
+  const CARD_W  = 165 + 14;           // card width + gap
+  const ONE_SET = portraits.length * CARD_W;
+  let offset = ONE_SET;               // start at 2nd set
+
+  strip.style.top = '50%';
+
+  function frame() {
+    offset += 0.55;
+    if (offset >= ONE_SET * 2) offset = ONE_SET; // seamless loop
+
+    strip.style.transform = `translateY(-50%) translateX(${-offset}px)`;
+
+    // Per-card 3D tilt based on distance from viewport center
+    const stageCx = stage.getBoundingClientRect().left + stage.offsetWidth / 2;
+    allCards.forEach(card => {
+      const r = card.getBoundingClientRect();
+      const cardCx = r.left + r.width / 2;
+      const dist = cardCx - stageCx;
+      const maxD = stage.offsetWidth * 0.50;
+      const t = Math.max(-1, Math.min(1, dist / maxD));  // -1=far left, 0=center, 1=far right
+
+      const rotY  = t * -42;                             // side tilt
+      const scale = 1 - Math.abs(t) * 0.18;             // center=1.0, edges=0.82
+      const opac  = 1 - Math.abs(t) * 0.45;             // center=1.0, edges=0.55
+      const yArc  = t * t * -95;                        // parabolic lift: edges rise UP toward text
+
+      card.style.transform = `translateY(${yArc.toFixed(1)}px) rotateY(${rotY.toFixed(1)}deg) scale(${scale.toFixed(3)})`;
+      card.style.opacity = Math.max(0.15, opac).toFixed(3);
+    });
+
+    requestAnimationFrame(frame);
+  }
+
+  frame();
+})();
+
+/* === Step card focus / collapse === */
+(function stepCards(){
+  const grid  = document.querySelector('.step-grid');
+  const cards = document.querySelectorAll('.scard');
+
+  function closeAll() {
+    grid.classList.remove('has-active');
+    cards.forEach(c => c.classList.remove('sc-active'));
+  }
+
+  cards.forEach(card => {
+    // Click card to open
+    card.addEventListener('click', e => {
+      // Don't open if already active (except if clicking the close btn)
+      if (e.target.closest('.scard-close')) {
+        closeAll();
+        return;
+      }
+      if (card.classList.contains('sc-active')) {
+        closeAll();
+        return;
+      }
+      closeAll();
+      card.classList.add('sc-active');
+      grid.classList.add('has-active');
+    });
+  });
+})();
+</script>
+
+<script>
+/* === 3D Globe Renderer === */
+(function initGlobe() {
+  const canvas = document.getElementById('globeCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2;
+  const R = W * 0.42; // sphere radius
+
+  const GOLD      = 'rgba(201,168,76,';
+  const GOLD_FULL = '#C9A84C';
+
+  // GSN city coordinates [lat°, lon°, label]
+  const cities = [
+    [ 19.08,  72.88, 'Mumbai'],
+    [ 25.20,  55.27, 'Dubai'],
+    [ 40.71, -74.01, 'New York'],
+    [ 51.51,  -0.13, 'London'],
+    [  1.35, 103.82, 'Singapore'],
+    [-26.20,  28.05, 'Johannesburg'],
+    [-33.87, 151.21, 'Sydney'],
+  ];
+
+  // Connection pairs (indices into cities array)
+  const arcs = [[0,1],[1,2],[2,3],[3,0],[1,4],[4,6],[0,5],[3,4],[2,6],[0,3]];
+
+  let rotY = 0;
+  let arcProgress = 0; // 0→1 cycling for draw-on effect
+
+  // Convert lat/lon to 3D unit sphere coords
+  function latLonTo3D(lat, lon) {
+    const phi  = (90 - lat) * Math.PI / 180;
+    const theta = (lon + 180) * Math.PI / 180;
+    return {
+      x: -Math.sin(phi) * Math.cos(theta),
+      y:  Math.cos(phi),
+      z:  Math.sin(phi) * Math.sin(theta)
+    };
+  }
+
+  // Rotate point around Y axis by angle
+  function rotateY(p, a) {
+    return {
+      x: p.x * Math.cos(a) + p.z * Math.sin(a),
+      y: p.y,
+      z: -p.x * Math.sin(a) + p.z * Math.cos(a)
+    };
+  }
+
+  // Project 3D → 2D screen
+  function project(p) {
+    return { sx: cx + p.x * R, sy: cy - p.y * R, z: p.z };
+  }
+
+  // Sample a great-circle arc between two 3D points
+  function sampleArc(p1, p2, steps) {
+    const pts = [];
+    for (let t = 0; t <= steps; t++) {
+      const f = t / steps;
+      // Spherical linear interpolation (slerp)
+      const dot = Math.min(1, Math.max(-1, p1.x*p2.x + p1.y*p2.y + p1.z*p2.z));
+      const omega = Math.acos(dot);
+      let ix, iy, iz;
+      if (Math.abs(omega) < 0.001) {
+        ix = p1.x + f*(p2.x-p1.x);
+        iy = p1.y + f*(p2.y-p1.y);
+        iz = p1.z + f*(p2.z-p1.z);
+      } else {
+        const s = Math.sin(omega);
+        const a = Math.sin((1-f)*omega)/s;
+        const b = Math.sin(f*omega)/s;
+        ix = a*p1.x + b*p2.x;
+        iy = a*p1.y + b*p2.y;
+        iz = a*p1.z + b*p2.z;
+      }
+      pts.push({x:ix, y:iy, z:iz});
+    }
+    return pts;
+  }
+
+  function drawGlobe() {
+    ctx.clearRect(0, 0, W, H);
+
+    // ── 1. Grid lines ──────────────────────────────────
+    const gridStep = 30; // degrees
+
+    // Latitude rings
+    for (let lat = -90; lat <= 90; lat += gridStep) {
+      ctx.beginPath();
+      let first = true;
+      for (let lon = 0; lon <= 360; lon += 3) {
+        let p = latLonTo3D(lat, lon);
+        p = rotateY(p, rotY);
+        const depth = (p.z + 1) / 2; // 0 (back) → 1 (front)
+        const alpha = 0.12 + depth * 0.25;
+        if (first) { ctx.moveTo(cx + p.x*R, cy - p.y*R); first = false; }
+        else ctx.lineTo(cx + p.x*R, cy - p.y*R);
+      }
+      ctx.strokeStyle = GOLD + '0.32)';
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    }
+
+    // Longitude meridians
+    for (let lon = 0; lon < 360; lon += gridStep) {
+      ctx.beginPath();
+      let first = true;
+      for (let lat = -90; lat <= 90; lat += 3) {
+        let p = latLonTo3D(lat, lon);
+        p = rotateY(p, rotY);
+        if (first) { ctx.moveTo(cx + p.x*R, cy - p.y*R); first = false; }
+        else ctx.lineTo(cx + p.x*R, cy - p.y*R);
+      }
+      ctx.strokeStyle = GOLD + '0.32)';
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+    }
+
+    // ── 2. Outer sphere edge ───────────────────────────
+    ctx.beginPath();
+    ctx.arc(cx, cy, R, 0, Math.PI*2);
+    ctx.strokeStyle = GOLD + '0.45)';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+
+    // ── 3. Arc connections ─────────────────────────────
+    arcs.forEach(([ai, bi], idx) => {
+      const c1 = cities[ai], c2 = cities[bi];
+      let p1 = rotateY(latLonTo3D(c1[0], c1[1]), rotY);
+      let p2 = rotateY(latLonTo3D(c2[0], c2[1]), rotY);
+
+      // Only draw if both endpoints are on front hemisphere
+      const visible = p1.z > -0.3 || p2.z > -0.3;
+      if (!visible) return;
+
+      const arcPts = sampleArc(p1, p2, 40);
+      const maxIdx = Math.floor(arcProgress * arcPts.length);
+
+      ctx.beginPath();
+      let started = false;
+      for (let k = 0; k <= maxIdx && k < arcPts.length; k++) {
+        const rp = arcPts[k];
+        if (rp.z < -0.1) { started = false; continue; }
+        const sx = cx + rp.x * R, sy = cy - rp.y * R;
+        if (!started) { ctx.moveTo(sx, sy); started = true; }
+        else ctx.lineTo(sx, sy);
+      }
+      ctx.strokeStyle = GOLD + '0.75)';
+      ctx.lineWidth = 1.0;
+      ctx.shadowColor = GOLD_FULL;
+      ctx.shadowBlur = 4;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    });
+
+    // ── 4. City dots ───────────────────────────────────
+    cities.forEach(([lat, lon]) => {
+      let p = rotateY(latLonTo3D(lat, lon), rotY);
+      if (p.z < -0.05) return; // behind globe
+      const sx = cx + p.x * R, sy = cy - p.y * R;
+      const depth = (p.z + 1) / 2;
+
+      // Outer glow ring
+      const grd = ctx.createRadialGradient(sx, sy, 0, sx, sy, 10);
+      grd.addColorStop(0,   GOLD + (0.5 + depth * 0.3) + ')');
+      grd.addColorStop(0.4, GOLD + (0.3 + depth * 0.2) + ')');
+      grd.addColorStop(1,   GOLD + '0)');
+      ctx.beginPath();
+      ctx.arc(sx, sy, 10, 0, Math.PI*2);
+      ctx.fillStyle = grd;
+      ctx.fill();
+
+      // Inner dot
+      ctx.beginPath();
+      ctx.arc(sx, sy, 3.2, 0, Math.PI*2);
+      ctx.fillStyle = GOLD_FULL;
+      ctx.shadowColor = GOLD_FULL;
+      ctx.shadowBlur = 8;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Dot outline circle
+      ctx.beginPath();
+      ctx.arc(sx, sy, 5.5, 0, Math.PI*2);
+      ctx.strokeStyle = GOLD + '0.55)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    });
+
+    // ── 5. Advance rotation & arc animation ───────────
+    rotY += 0.004;
+    arcProgress += 0.004;
+    if (arcProgress > 1) arcProgress = 0;
+
+    requestAnimationFrame(drawGlobe);
+  }
+
+  drawGlobe();
+})();
+</script>
+
+</body>
+</html>
